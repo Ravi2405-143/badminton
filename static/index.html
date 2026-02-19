@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Tournament Manager</title>
+    <link rel="stylesheet" href="/static/css/style.css?v=1.2.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>🏆 Sportify</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" data-view="dashboard"><i class="fas fa-home"></i> Dashboard</li>
+                    <li data-view="tournaments"><i class="fas fa-trophy"></i> Tournaments</li>
+                    <li data-view="results"><i class="fas fa-history"></i> Recent Results</li>
+                    <li data-view="rankings"><i class="fas fa-award"></i> Top Rankings</li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btn-login" class="btn-secondary">Admin Login</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1 id="view-title">Dashboard</h1>
+                <div class="user-profile">
+                    <span id="user-role">Guest Mode</span>
+                </div>
+            </header>
+
+            <div id="content-area" class="content-area">
+                <!-- Dynamic Content Loads Here -->
+                <div class="loader-container" id="loader">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-container" class="modal-overlay hidden">
+        <div class="modal">
+            <header class="modal-header">
+                <h3 id="modal-title">Title</h3>
+                <button class="close-modal">&times;</button>
+            </header>
+            <div id="modal-content" class="modal-body">
+                <!-- Modal Body -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/api.js?v=1.2.0" defer></script>
+    <script src="/static/js/components.js?v=1.2.0" defer></script>
+    <script src="/static/js/app.js?v=1.2.0" defer></script>
+</body>
+
+</html>
