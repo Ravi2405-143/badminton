@@ -14,30 +14,55 @@ const app = {
 
     bindEvents() {
         console.log('Binding events...');
+
+        // Helper: switch view and update active states in both navs
+        const switchView = (view) => {
+            console.log('Switching to view:', view);
+            this.loadView(view);
+
+            // Sidebar active state
+            document.querySelectorAll('.sidebar-nav li').forEach(el => el.classList.remove('active'));
+            const sidebarItem = document.querySelector(`.sidebar-nav li[data-view="${view}"]`);
+            if (sidebarItem) sidebarItem.classList.add('active');
+
+            // Bottom nav active state
+            document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+            const bottomItem = document.querySelector(`.bottom-nav-item[data-view="${view}"]`);
+            if (bottomItem) bottomItem.classList.add('active');
+        };
+
+        // Sidebar nav
         document.querySelectorAll('.sidebar-nav li').forEach(li => {
             li.addEventListener('click', (e) => {
-                const view = e.currentTarget.dataset.view;
-                console.log('Switching to view:', view);
-                this.loadView(view);
-
-                // Update active state
-                document.querySelectorAll('.sidebar-nav li').forEach(el => el.classList.remove('active'));
-                e.currentTarget.classList.add('active');
+                switchView(e.currentTarget.dataset.view);
             });
         });
 
-        const btnLogin = document.getElementById('btn-login');
-        if (btnLogin) {
-            btnLogin.addEventListener('click', () => {
-                console.log('Login clicked');
-                this.showLogin();
+        // Bottom nav
+        document.querySelectorAll('.bottom-nav-item[data-view]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                switchView(e.currentTarget.dataset.view);
             });
-        }
+        });
+
+        // Login buttons (desktop sidebar + mobile bottom nav)
+        ['btn-login', 'btn-login-mobile'].forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.addEventListener('click', () => this.showLogin());
+        });
 
         const closeModal = document.querySelector('.close-modal');
         if (closeModal) {
             closeModal.addEventListener('click', () => {
                 document.getElementById('modal-container').classList.add('hidden');
+            });
+        }
+
+        // Close modal when clicking backdrop
+        const modalOverlay = document.getElementById('modal-container');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) modalOverlay.classList.add('hidden');
             });
         }
     },

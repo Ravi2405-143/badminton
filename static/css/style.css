@@ -539,14 +539,15 @@ input:focus {
     display: none !important;
 }
 
-/* Responsiveness */
+/* =============================================
+   RESPONSIVE — TABLET (≤1024px)
+   ============================================= */
 @media (max-width: 1024px) {
     :root {
-        --sidebar-width: 80px;
+        --sidebar-width: 72px;
     }
 
     .sidebar-header h2,
-    .sidebar-nav ul li span,
     .sidebar-footer button {
         display: none;
     }
@@ -554,60 +555,223 @@ input:focus {
     .sidebar-nav ul li {
         justify-content: center;
         padding: 1.25rem;
+        font-size: 0;
+        /* hide text, keep icon */
+    }
+
+    .sidebar-nav ul li i {
+        font-size: 1.2rem;
+        margin-right: 0;
     }
 }
 
+/* =============================================
+   RESPONSIVE — MOBILE (≤768px)
+   Full bottom-nav + single-column layout
+   ============================================= */
 @media (max-width: 768px) {
+
+    /* --- Layout -------------------------------- */
     .app-container {
         flex-direction: column;
     }
 
+    /* Hide sidebar completely — replaced by bottom nav */
     .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        padding: 1.5rem;
+        display: none;
     }
 
-    .sidebar-header {
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-
-    .sidebar-nav ul {
-        display: flex;
-        justify-content: space-around;
-        padding: 0.5rem;
-    }
-
-    .sidebar-nav ul li {
-        padding: 0.75rem;
-        margin-bottom: 0;
-    }
-
+    /* Main area fills full width, leave bottom padding for nav bar */
     .main-content {
-        padding: 1.5rem;
         margin-left: 0 !important;
+        padding: 1.25rem 1rem 6rem;
+        /* extra bottom for bottom-nav */
+        width: 100%;
+        min-height: 100dvh;
     }
 
+    /* --- Header -------------------------------- */
+    .top-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        gap: 0.5rem;
+    }
+
+    .top-header h1 {
+        font-size: 1.35rem;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 55vw;
+    }
+
+    .user-profile {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.75rem;
+    }
+
+    /* --- Cards / Grid -------------------------- */
     .stats-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .card {
+        padding: 1.25rem;
+        border-radius: 1rem;
+    }
+
+    .card .value {
+        font-size: 2rem;
     }
 
     .grid-2 {
         grid-template-columns: 1fr;
-    }
-
-    .top-header {
-        flex-direction: column;
-        align-items: flex-start;
         gap: 1rem;
     }
 
-    /* Ensure tables are scrollable on small screens */
-    .table-responsive {
+    /* --- Tables -------------------------------- */
+    .table-container {
+        border-radius: 1rem;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
     }
+
+    table {
+        min-width: 480px;
+        /* prevent column crush */
+    }
+
+    th,
+    td {
+        padding: 0.85rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    /* --- Buttons ------------------------------- */
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        /* WCAG touch target */
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .view-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .view-header .btn-primary {
+        width: 100%;
+    }
+
+    /* --- Modal as bottom sheet ----------------- */
+    .modal-overlay {
+        align-items: flex-end;
+    }
+
+    .modal {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 1.5rem 1.5rem 0 0;
+        padding: 1.75rem 1.25rem 2rem;
+        max-height: 90dvh;
+        overflow-y: auto;
+    }
+
+    /* --- Form inputs — prevent iOS zoom -------- */
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+        /* prevents iOS auto-zoom */
+    }
+
+    /* --- Status badges ------------------------- */
+    .status-badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.75rem;
+    }
+
+    /* --- Empty state --------------------------- */
+    .empty-state {
+        padding: 2.5rem 1rem;
+        border-radius: 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* --- Bottom Navigation Bar ----------------- */
+    .bottom-nav {
+        display: flex !important;
+    }
+}
+
+/* =============================================
+   MOBILE BOTTOM NAVIGATION BAR
+   (always in DOM, hidden on desktop)
+   ============================================= */
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    padding: 0.5rem 0 env(safe-area-inset-bottom, 0.5rem);
+    justify-content: space-around;
+    align-items: center;
+}
+
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0.4rem 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: color 0.2s, background 0.2s;
+    border: none;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-item i {
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item.active {
+    color: var(--primary);
+}
+
+.bottom-nav-item.active i {
+    transform: scale(1.15);
+}
+
+/* Login button in bottom nav */
+.bottom-nav-login {
+    font-size: 0.6rem;
+    color: var(--text-muted);
 }
