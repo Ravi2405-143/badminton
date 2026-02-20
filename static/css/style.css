@@ -327,7 +327,7 @@ body {
     background: var(--bg-surface);
     border-radius: 1.5rem;
     border: 1px solid var(--border);
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 table {
@@ -566,6 +566,14 @@ input:focus {
         width: 100%;
         height: auto;
         position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1.5rem;
+    }
+
+    .sidebar-header {
+        margin-bottom: 1.5rem;
+        text-align: center;
     }
 
     .sidebar-nav ul {
@@ -576,10 +584,12 @@ input:focus {
 
     .sidebar-nav ul li {
         padding: 0.75rem;
+        margin-bottom: 0;
     }
 
     .main-content {
-        padding: 1rem;
+        padding: 1.5rem;
+        margin-left: 0 !important;
     }
 
     .stats-grid {
@@ -588,5 +598,16 @@ input:focus {
 
     .grid-2 {
         grid-template-columns: 1fr;
+    }
+
+    .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* Ensure tables are scrollable on small screens */
+    .table-responsive {
+        overflow-x: auto;
     }
 }
