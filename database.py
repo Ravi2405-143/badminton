@@ -1,20 +1,33 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-
 import os
 
-# Use /tmp for SQLite on Vercel as it's the only writable directory
-if os.getenv("VERCEL"):
-    SQLALCHEMY_DATABASE_URL = "sqlite:////tmp/tournament.db"
+# DATABASE_URL set → use PostgreSQL (Vercel Postgres, Supabase, etc.)
+# Otherwise fall back to local SQLite for development
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    # Vercel Postgres uses postgres:// — SQLAlchemy needs postgresql://
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+    engine = create_engine(
+        DATABASE_URL,
+        pool_pre_ping=True,        # auto-reconnect if connection drops
+        pool_size=5,
+        max_overflow=2,
+    )
 else:
-    SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./tournament.db")
+    # Local SQLite (development only)
+    LOCAL_DB = "sqlite:///./tournament.db"
+    engine = create_engine(
+        LOCAL_DB,
+        connect_args={"check_same_thread": False},
+    )
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()

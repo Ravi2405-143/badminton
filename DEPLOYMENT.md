@@ -4,34 +4,44 @@ Follow these steps to deploy the Sportify Tournament Manager to Vercel.
 
 ## 1. Prerequisites
 - Have a [Vercel account](https://vercel.com).
-- Install the [Vercel CLI](https://vercel.com/docs/cli) (optional, but recommended) or connect your GitHub repository.
+- Push your code to GitHub (already done).
 
-## 2. Deployment Steps
+## 2. Deploy on Vercel
 
-### Option A: Vercel CLI (Fastest)
-1. Open your terminal in the `backend` directory.
-2. Run the command:
-   ```bash
-   vercel
-   ```
-3. Follow the prompts (Select "Yes" for "Link to existing project?" if applicable).
-4. When asked for the build command, leave it blank (Vercel will detect FastAPI).
+1. Go to [vercel.com](https://vercel.com) → **Add New Project**
+2. Import your GitHub repo (`Ravi2405-143/badminton`)
+3. Set **Root Directory** to `backend`
+4. Click **Deploy**
 
-### Option B: GitHub Integration
-1. Push your code to a GitHub repository.
-2. Go to the Vercel Dashboard and click "Add New" > "Project".
-3. Import your repository.
-4. Set the **Root Directory** to `backend`.
-5. Click **Deploy**.
+---
 
-## 3. Important Notes on Data ⚠️
+## 3. Fix Data Erasure — Add a Permanent Database ⚠️
 
-> [!WARNING]
-> **Data Resets on Restart**
-> Because Vercel uses serverless functions, the `tournament.db` file will be **cleared** every time the app redeploys or restarts. 
+> [!IMPORTANT]
+> By default, Vercel uses serverless functions with an ephemeral filesystem.
+> Data stored in SQLite (`/tmp`) is **wiped on every cold start**.
+> You **must** connect a permanent database to persist your tournaments.
 
-### To persist data permanently:
-1. Create a **Vercel Postgres** database in your Vercel project dashboard.
-2. Vercel will automatically add a `POSTGRES_URL` environment variable.
-3. In your Vercel Project Settings, add an Environment Variable named `DATABASE_URL` and copy the value from `POSTGRES_URL`.
-4. The app will automatically switch to the permanent database on next deploy!
+### Step-by-step: Vercel Postgres (Free)
+
+1. Go to your Vercel project dashboard
+2. Click **Storage** tab → **Create Database** → choose **Postgres**
+3. Name it (e.g. `sportify-db`) and click **Create & Continue**
+4. Vercel will add environment variables automatically. You're done!
+5. Click **Redeploy** — your data will now persist permanently ✅
+
+### Or: Use Supabase (also free)
+
+1. Go to [supabase.com](https://supabase.com) → create a new project
+2. Go to **Project Settings** → **Database** → copy the **Connection String (URI)**
+3. In Vercel → your project → **Settings** → **Environment Variables**
+4. Add: `DATABASE_URL` = `<your supabase connection string>`
+5. Redeploy ✅
+
+---
+
+## 4. How It Works
+
+The app automatically detects the database:
+- If `DATABASE_URL` env var is set → uses **PostgreSQL** (permanent ✅)
+- If not set → uses local **SQLite** (development only)
