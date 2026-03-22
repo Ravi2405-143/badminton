@@ -7,6 +7,9 @@ def update_match_score(db: Session, match_id: int, scores_data: list):
     if not match:
         return None
     
+    if match.status == MatchStatus.COMPLETED:
+        raise ValueError("Match is already completed and cannot be rescored.")
+    
     # Update or Create Score objects
     for s_data in scores_data:
         db_score = db.query(Score).filter(Score.match_id == match_id, Score.team_id == s_data['team_id']).first()
@@ -44,7 +47,10 @@ def calculate_cricket_winner(db: Session, match: Match):
     elif s2.runs > s1.runs:
         match.winner_id = s2.team_id
         match.status = MatchStatus.COMPLETED
-    # Handle draw if needed
+    else:
+        # Handle draw if needed
+        match.winner_id = None
+        match.status = MatchStatus.COMPLETED
     
     if match.status == MatchStatus.COMPLETED:
         update_points_table(db, match)
@@ -60,6 +66,10 @@ def calculate_badminton_winner(db: Session, match: Match):
         match.status = MatchStatus.COMPLETED
     elif s2.sets_won > s1.sets_won:
         match.winner_id = s2.team_id
+        match.status = MatchStatus.COMPLETED
+    else:
+        # Draw
+        match.winner_id = None
         match.status = MatchStatus.COMPLETED
 
     if match.status == MatchStatus.COMPLETED:
