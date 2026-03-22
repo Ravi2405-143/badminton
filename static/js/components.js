@@ -167,7 +167,7 @@ const Components = {
                                 <td>${t.points_scored}</td>
                                 <td>${t.points_conceded}</td>
                                 <td class="${t.nrr >= 0 ? 'text-success' : 'text-danger'}">
-                                    ${t.nrr > 0 ? '+' : ''}${t.nrr.toFixed(0)}
+                                    ${t.nrr > 0 ? '+' : ''}${Number.isInteger(t.nrr) ? t.nrr : Number(t.nrr.toFixed(3))}
                                 </td>
                                 <td><strong>${t.points}</strong></td>
                             </tr>
@@ -266,7 +266,7 @@ const Components = {
                                 <td>${r.tournament_name}</td>
                                 <td>${r.wins}</td>
                                 <td>${r.points}</td>
-                                <td class="${r.nrr >= 0 ? 'text-success' : 'text-danger'}">${r.nrr > 0 ? '+' : ''}${r.nrr}</td>
+                                <td class="${r.nrr >= 0 ? 'text-success' : 'text-danger'}">${r.nrr > 0 ? '+' : ''}${Number.isInteger(r.nrr) ? r.nrr : Number(r.nrr.toFixed(3))}</td>
                             </tr>
                         `).join('')}
                     </tbody>

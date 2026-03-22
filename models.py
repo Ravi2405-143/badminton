@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum, Float, Boolean, Table
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship
 import enum
-
-Base = declarative_base()
+from database import Base
 
 class SportType(enum.Enum):
     CRICKET = "cricket"

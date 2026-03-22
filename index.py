@@ -9,7 +9,10 @@ from fastapi.security import OAuth2PasswordRequestForm
 import models, schemas, database, fixtures, scoring, auth
 from database import engine, get_db
 
-models.Base.metadata.create_all(bind=engine)
+try:
+    models.Base.metadata.create_all(bind=engine)
+except Exception as e:
+    print(f"Warning: Database initialization failed: {e}")
 
 app = FastAPI(title="Sports Tournament Management API")
 
@@ -18,8 +21,11 @@ app = FastAPI(title="Sports Tournament Management API")
 current_dir = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.join(current_dir, "static")
 
-if not os.path.exists(static_dir):
-    os.makedirs(static_dir)
+try:
+    if not os.path.exists(static_dir):
+        os.makedirs(static_dir)
+except OSError:
+    print(f"Warning: Could not create static directory {static_dir} due to read-only filesystem.")
 
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
@@ -107,7 +113,10 @@ def get_player_rankings(limit: int = 20, db: Session = Depends(get_db)):
 # Match & Scoring Endpoints
 @app.post("/matches/{match_id}/score", response_model=schemas.Match)
 def update_match_score(match_id: int, scores: List[schemas.ScoreBase], db: Session = Depends(get_db)):
-    match = scoring.update_match_score(db, match_id, [s.dict() for s in scores])
+    try:
+        match = scoring.update_match_score(db, match_id, [s.dict() for s in scores])
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     if not match:
         raise HTTPException(status_code=404, detail="Match not found")
     return match

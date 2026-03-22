@@ -18,8 +18,11 @@ if DATABASE_URL:
         max_overflow=2,
     )
 else:
-    # Local SQLite (development only)
-    LOCAL_DB = "sqlite:///./tournament.db"
+    # Local SQLite (development only or Vercel fallback)
+    if os.getenv("VERCEL") == "1":
+        LOCAL_DB = "sqlite:////tmp/tournament.db"
+    else:
+        LOCAL_DB = "sqlite:///./tournament.db"
     engine = create_engine(
         LOCAL_DB,
         connect_args={"check_same_thread": False},
